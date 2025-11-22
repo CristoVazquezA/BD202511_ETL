@@ -1,4 +1,5 @@
-﻿using CargaArchivos.Components;
+﻿using CargaArchivos.Commands;
+using CargaArchivos.Components;
 using CargaArchivos.DataBase;
 
 namespace CargaArchivos
@@ -17,6 +18,11 @@ namespace CargaArchivos
             {
                 return new SQLServer(connectionString!);
             });
+
+            builder.Services.AddScoped<ClienteCommands>();
+            builder.Services.AddScoped<ProductoCommands>();
+            builder.Services.AddScoped<VentaCommands>();
+            builder.Services.AddScoped<VentaDetalleCommands>();
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
