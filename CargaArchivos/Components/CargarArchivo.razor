@@ -1,0 +1,39 @@
+﻿@page "/cargar-archivo"
+@rendermode InteractiveServer
+
+<title>CargarArchivo Component</title>
+
+<h3>CargarArchivo</h3>
+
+
+
+
+<div class="card shadow-sm mt-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Cargar archivo de texto</h5>
+    </div>
+
+    <div class="card-body">
+
+        <div class="mb-3">
+            <InputFile OnChange="LoadFile" class="form-control" />
+        </div>
+        <p>@FileContent</p>
+        @if (!string.IsNullOrEmpty(FileContent))
+        {
+            <div class="alert alert-success">
+                Archivo cargado correctamente
+            </div>
+
+            <h6>Contenido del archivo:</h6>
+            <pre class="border p-3 bg-light" style="white-space: pre-wrap;">
+    @FileContent
+                </pre>
+        }
+        else
+        {
+            <p class="text-muted">Seleccione un archivo .txt para visualizar su contenido.</p>
+        }
+    </div>
+</div>
+
