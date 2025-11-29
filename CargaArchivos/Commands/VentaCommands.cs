@@ -26,7 +26,7 @@ namespace CargaArchivos.Commands
                 if (venta != null && incluirConceptos)
                 {
                     // Obtenemos los detalles de la venta
-                    VentaDetalleCommands detalleCommands = new VentaDetalleCommands();
+                    VentaDetalleCommands detalleCommands = new VentaDetalleCommands(_sqlServer);
                     venta.Conceptos = await detalleCommands.GetVentasDetalleAsync(venta.Id);
                 }
                 return venta;
@@ -103,7 +103,7 @@ namespace CargaArchivos.Commands
 
                 foreach (var concepto in venta.Conceptos)
                 {
-                    VentaDetalleCommands detalleCommands = new VentaDetalleCommands();
+                    VentaDetalleCommands detalleCommands = new VentaDetalleCommands(_sqlServer);
                     await detalleCommands.AddVentaDetalleAsync(concepto, ventaId);
                 }
             }
@@ -124,7 +124,7 @@ namespace CargaArchivos.Commands
 
                 foreach (var concepto in venta.Conceptos)
                 {
-                    VentaDetalleCommands detalleCommands = new VentaDetalleCommands();
+                    VentaDetalleCommands detalleCommands = new VentaDetalleCommands(_sqlServer);
                     await detalleCommands.AddVentaDetalleTransactionAsync(sqlConnection, sqlTransaction, concepto, ventaId);
                 }
                 sqlTransaction.Commit();
