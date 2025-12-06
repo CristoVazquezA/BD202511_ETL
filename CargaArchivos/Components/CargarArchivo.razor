@@ -1,14 +1,4 @@
-﻿@page "/cargar-archivo"
-@rendermode InteractiveServer
-
-<title>CargarArchivo Component</title>
-
-<h3>CargarArchivo</h3>
-
-
-
-
-<div class="card shadow-sm mt-4">
+﻿<div class="card shadow-sm mt-4">
     <div class="card-header bg-primary text-white">
         <h5 class="mb-0">Cargar archivo de texto</h5>
     </div>
@@ -27,12 +17,53 @@
 
             <h6>Contenido del archivo:</h6>
             <pre class="border p-3 bg-light" style="white-space: pre-wrap;">
-    @FileContent
-                </pre>
+        @FileContent
+                    </pre>
         }
         else
         {
             <p class="text-muted">Seleccione un archivo .txt para visualizar su contenido.</p>
+        }
+        @if (Ventas.Count > 0)
+        {
+            <h5 class="mt-4">Registros procesados:</h5>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Venta</th>
+                        <th>Fecha</th>
+                        <th>Folio</th>
+                        <th>Cliente</th>
+                        <th>Producto</th>
+                        <th>Cant</th>
+                        <th>Unitario</th>
+                        <th>Importe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in Ventas)
+                    {
+                        <tr>
+                            <td>@v.VentaId</td>
+                            <td>@v.Fecha.ToString("yyyy-MM-dd")</td>
+                            <td>@v.Folio</td>
+                            <td>@v.NombreCliente</td>
+                            <td>@v.DescripcionProducto</td>
+                            <td>@v.Cantidad</td>
+                            <td>@v.ValorUnitario</td>
+                            <td>@v.Importe</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        @if (Ventas.Count > 0)
+        {
+            <button class="btn btn-success mb-3" @onclick="GuardarEnMongo">
+                Guardar en MongoDB
+            </button>
         }
     </div>
 </div>

@@ -1,6 +1,7 @@
 ﻿using CargaArchivos.Commands;
 using CargaArchivos.Components;
 using CargaArchivos.DataBase;
+using CargaArchivos.Services;
 
 namespace CargaArchivos
 {
@@ -23,6 +24,8 @@ namespace CargaArchivos
             builder.Services.AddScoped<ProductoCommands>();
             builder.Services.AddScoped<VentaCommands>();
             builder.Services.AddScoped<VentaDetalleCommands>();
+            builder.Services.AddSingleton<MongoVentaService>();
+
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
