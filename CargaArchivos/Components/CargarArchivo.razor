@@ -1,70 +1,113 @@
-﻿<div class="card shadow-sm mt-4">
+﻿@page "/cargar-archivo"
+@rendermode InteractiveServer
+
+<div class="card shadow-sm mt-4">
     <div class="card-header bg-primary text-white">
         <h5 class="mb-0">Cargar archivo de texto</h5>
     </div>
 
     <div class="card-body">
 
-        <div class="mb-3">
-            <InputFile OnChange="LoadFile" class="form-control" />
-        </div>
-        <p>@FileContent</p>
-        @if (!string.IsNullOrEmpty(FileContent))
-        {
-            <div class="alert alert-success">
-                Archivo cargado correctamente
-            </div>
+        <!-- INPUT REAL PARA CSV -->
+        <InputFile OnChange="OnCsvSelected"
+                   accept=".csv,text/csv" />
 
-            <h6>Contenido del archivo:</h6>
-            <pre class="border p-3 bg-light" style="white-space: pre-wrap;">
-        @FileContent
-                    </pre>
-        }
-        else
-        {
-            <p class="text-muted">Seleccione un archivo .txt para visualizar su contenido.</p>
-        }
-        @if (Ventas.Count > 0)
-        {
-            <h5 class="mt-4">Registros procesados:</h5>
+        <!-- INPUT REAL PARA JSON -->
+        <InputFile OnChange="OnJsonSelected"
+                   accept=".json,text/json" />
 
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Venta</th>
-                        <th>Fecha</th>
-                        <th>Folio</th>
-                        <th>Cliente</th>
-                        <th>Producto</th>
-                        <th>Cant</th>
-                        <th>Unitario</th>
-                        <th>Importe</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var v in Ventas)
-                    {
-                        <tr>
-                            <td>@v.VentaId</td>
-                            <td>@v.Fecha.ToString("yyyy-MM-dd")</td>
-                            <td>@v.Folio</td>
-                            <td>@v.NombreCliente</td>
-                            <td>@v.DescripcionProducto</td>
-                            <td>@v.Cantidad</td>
-                            <td>@v.ValorUnitario</td>
-                            <td>@v.Importe</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
+        <!-- INPUT REAL PARA XML -->
+        <InputFile OnChange="OnXmlSelected"
+                   accept=".xml,text/xml" />
 
-        @if (Ventas.Count > 0)
-        {
-            <button class="btn btn-success mb-3" @onclick="GuardarEnMongo">
-                Guardar en MongoDB
+        <!-- BOTONES PARA ABRIR EXPLORADOR -->
+        <div class="d-flex flex-wrap gap-3 mt-3">
+
+            <button class="btn btn-outline-primary d-flex align-items-center"
+                    @onclick="@(() => csvInput.FocusAsync())">
+                <i class="bi bi-filetype-csv me-2"></i>
+                Seleccionar archivo CSV
             </button>
+
+            <button class="btn btn-outline-secondary d-flex align-items-center"
+                    @onclick="@(() => jsonInput.FocusAsync())">
+                <i class="bi bi-filetype-json me-2"></i>
+                Seleccionar archivo JSON
+            </button>
+
+            <button class="btn btn-outline-warning d-flex align-items-center"
+                    @onclick="@(() => xmlInput.FocusAsync())">
+                <i class="bi bi-filetype-xml me-2"></i>
+                Seleccionar archivo XML
+            </button>
+
+        </div>
+
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="alert alert-danger mt-3">@ErrorMessage</div>
         }
+
+        @if (Ventas.Count > 0)
+        {
+            <div class="mt-4">
+                <button class="btn btn-success" @onclick="GuardarEnMongo">
+                    Guardar en MongoDB (@Ventas.Count registros)
+                </button>
+            </div>
+        }
+
+        @if (Ventas != null && Ventas.Count > 0)
+        {
+            <div class="mt-4">
+                <h5 class="mb-3">Vista previa de datos</h5>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>VentaId</th>
+                                <th>Fecha</th>
+                                <th>Folio</th>
+                                <th>ClienteId</th>
+                                <th>NombreCliente</th>
+                                <th>Telefono</th>
+                                <th>Domicilio</th>
+                                <th>ProductoId</th>
+                                <th>SKU</th>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Valor Unitario</th>
+                                <th>Importe</th>
+                                <th>Total Venta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Ventas)
+                            {
+                                <tr>
+                                    <td>@item.VentaId</td>
+                                    <td>@item.Fecha</td>
+                                    <td>@item.Folio</td>
+                                    <td>@item.ClienteId</td>
+                                    <td>@item.NombreCliente</td>
+                                    <td>@item.Telefono</td>
+                                    <td>@item.Domicilio</td>
+                                    <td>@item.ProductoId</td>
+                                    <td>@item.SKU</td>
+                                    <td>@item.DescripcionProducto</td>
+                                    <td>@item.Cantidad</td>
+                                    <td>@item.ValorUnitario</td>
+                                    <td>@item.Importe</td>
+                                    <td>@item.TotalVenta</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+
     </div>
 </div>
 

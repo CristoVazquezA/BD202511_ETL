@@ -6,18 +6,30 @@ namespace CargaArchivos.Services
 {
     public class MongoVentaService
     {
-        private readonly IMongoCollection<VentaCompleta> _ventas;
+        private readonly IMongoDatabase _database;
+        private readonly IConfiguration _config;
 
         public MongoVentaService(IConfiguration config)
         {
+            _config = config;
             var client = new MongoClient(config["MongoDB:ConnectionString"]);
-            var database = client.GetDatabase(config["MongoDB:Database"]);
-            _ventas = database.GetCollection<VentaCompleta>(config["MongoDB:Collection"]);
+            _database = client.GetDatabase(config["MongoDB:Database"]);
         }
 
-        public async Task InsertManyAsync(List<VentaCompleta> ventas)
+        private IMongoCollection<VentaCompleta> GetCollection(string key)
         {
-            await _ventas.InsertManyAsync(ventas);
+            string collectionName = _config[$"MongoDB:Collections:{key}"];
+
+            if (string.IsNullOrEmpty(collectionName))
+                throw new Exception($"No existe la colección definida en appsettings para la clave {key}");
+
+            return _database.GetCollection<VentaCompleta>(collectionName);
+        }
+
+        public async Task InsertManyAsync(string tipo, List<VentaCompleta> ventas)
+        {
+            var collection = GetCollection(tipo);
+            await collection.InsertManyAsync(ventas);
         }
     }
 }
